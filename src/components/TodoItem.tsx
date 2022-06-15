@@ -1,7 +1,6 @@
 import styles from "../Todo.module.css";
 import {Todo} from "../App"
 
-
 interface Props {
     todo: Todo;
     readonly onDeleteTodo: (id: number) => void;

@@ -1,18 +1,16 @@
 import styles from "../Todo.module.css";
-import { TodoConsumer } from "../contexts/todo";
+import {useContext} from "react";
+import TodoContext from "../contexts/todo";
 
 const TodoInput = () => {
+    const {state, actions} =  useContext(TodoContext);
     return(
-        <TodoConsumer>
-            {(value)=>(
-                <div className={styles.input}>
-                    <form onSubmit={value.actions.onSubmitTodo}>
-                        <input placeholder="Input todo." value={value.state.input} onChange={value.actions.onChangeInput}/>
-                        <button type="submit">Add</button>
-                    </form>
-                </div>
-            )}
-        </TodoConsumer>
+        <div className={styles.input}>
+            <form onSubmit={actions.onSubmitTodo}>
+                <input placeholder="Input todo." value={state.input} onChange={actions.onChangeInput} />
+                <button type="submit">Add</button>
+            </form>
+        </div>
     );
 }
 

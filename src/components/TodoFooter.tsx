@@ -1,15 +1,13 @@
 import styles from "../Todo.module.css";
-import {TodoConsumer} from "../contexts/todo";
+import {useContext} from "react";
+import TodoContext from "../contexts/todo";
 
 const TodoFooter = () => {
+    const {actions} = useContext(TodoContext);
     return(
-        <TodoConsumer>
-        {(value)=>(
-            <div className={styles.footer}>
-                <button onClick={value.actions.onClearTodos}>Delete All</button>
-            </div>
-        )}
-        </TodoConsumer>
+        <div className={styles.footer}>
+            <button onClick={actions.onClearTodos}>Delete All</button>
+        </div>
     );
 };
 
