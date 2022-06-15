@@ -1,28 +1,27 @@
 import styles from "../Todo.module.css";
 import TodoItem from "./TodoItem";
-import {Todo} from "../App"
+import { TodoConsumer } from "../contexts/todo";
 
-interface Props {
-    readonly todos: Todo[];
-    readonly onDeleteTodo: (id: number) => void;
-    readonly onToggleDone: (id: number) => void;
-}
-
-const TodoList = ({todos, onDeleteTodo, onToggleDone}: Props) => {
+const TodoList = () => {
     return (
-        <div className={styles.list}>
-            {
-                todos.map((todo)=>{
-                    return (
-                        <TodoItem 
-                            todo={todo} key={todo.id}
-                            onDeleteTodo={onDeleteTodo}
-                            onToggleDone={onToggleDone}
-                        />
-                    ); 
-                })
-            }
-        </div>
+        <TodoConsumer>
+            {(value)=>(
+                <div className={styles.list}>
+                    {
+                        value.state.todos.map((todo) => {
+                            return (
+                                <TodoItem
+                                    todo={todo} key={todo.id}
+                                    onDeleteTodo={value.actions.onDeleteTodo}
+                                    onToggleDone={value.actions.onToggleDone}
+                                />
+                            );
+                        })
+                    }
+                </div>
+            )}
+        </TodoConsumer>
+
     );
 };
 

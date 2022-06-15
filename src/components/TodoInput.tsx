@@ -1,31 +1,18 @@
 import styles from "../Todo.module.css";
-//import React, {useState} from "react";
+import { TodoConsumer } from "../contexts/todo";
 
-interface Props{
-    input: string;
-    readonly onChangeInput: (e: React.ChangeEvent<HTMLInputElement>)=>void;
-    readonly onSubmitTodo:  (e: React.FormEvent<HTMLFormElement>)=>void;
-}
-
-const TodoInput = ({input, onChangeInput, onSubmitTodo}: Props) => {
-    //// Move to top-level component
-    // const [value, setValue] = useState("");
-    // const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     setValue(() => e.target.value);
-    // };
-    // const onSubmitTodo = (e: React.FormEvent<HTMLFormElement>) =>{
-    //     e.preventDefault();
-    //     onInsertTodo(value);
-    //     setValue(()=>"");
-    // };
-
+const TodoInput = () => {
     return(
-        <div className={styles.input}>
-            <form onSubmit={onSubmitTodo}>
-                <input placeholder="Input todo." value={input} onChange={onChangeInput}/>
-                <button type="submit">Add</button>
-            </form>
-        </div>
+        <TodoConsumer>
+            {(value)=>(
+                <div className={styles.input}>
+                    <form onSubmit={value.actions.onSubmitTodo}>
+                        <input placeholder="Input todo." value={value.state.input} onChange={value.actions.onChangeInput}/>
+                        <button type="submit">Add</button>
+                    </form>
+                </div>
+            )}
+        </TodoConsumer>
     );
 }
 
