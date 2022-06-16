@@ -1,30 +1,22 @@
-import React from "react";
-import { connect } from "react-redux"
+import React, {useCallback} from "react";
+import{useSelector, useDispatch} from "react-redux";
 import {TodoState, changeTodoInput, addTodo, toggleTodoStatus, removeTodo, clearAllTodos} from "../modules/todos";
-import Todos from "../components/Todos";
-import {Todo} from "../App";
+import Todos from "../components/Todos"
 
-interface Props{
-    readonly input: string;
-    readonly todos: Todo[];
-    readonly changeTodoInput: (input: string)=>void;
-    readonly addTodo: (input: string)=>void;
-    readonly toggleTodoStatus: (id: number)=>void;
-    readonly removeTodo: (id: number)=>void;
-    readonly clearAllTodos: ()=>void
-}
-
-const TodosContainer = ({input, todos, changeTodoInput, addTodo, toggleTodoStatus, removeTodo, clearAllTodos}: Props) => {
+const TodosContainer = () => {
+    const {input, todos} = useSelector((state: TodoState)=>({input: state.input, todos: state.todos}));
+    const dispatch = useDispatch();
+    const onChangeInput = useCallback((input: string)=>dispatch(changeTodoInput(input)),[dispatch]);
+    const onInsert = useCallback((input: string)=>dispatch(addTodo(input)), [dispatch]);
+    const onToggle = useCallback((id: number)=>dispatch(toggleTodoStatus(id)), [dispatch]);
+    const onRemove = useCallback((id: number)=>dispatch(removeTodo(id)), [dispatch]);
+    const onClearAll = useCallback(()=>dispatch(clearAllTodos()), [dispatch]);
     return (
-        <Todos input={input} todos={todos} onChangeInput={changeTodoInput} onInsert={addTodo}
-               onToggle={toggleTodoStatus} onRemove={removeTodo} onClearAll={clearAllTodos}/>
-    );
+        <Todos input={input} todos={todos} onChangeInput={onChangeInput} onInsert={onInsert}
+               onToggle={onToggle} onRemove={onRemove} onClearAll={onClearAll}/>
+    )
 }
 
-//Export component.
-export default  connect(
-    (state: TodoState)=>({input: state.input, todos: state.todos}),
-    {changeTodoInput, addTodo, toggleTodoStatus, removeTodo, clearAllTodos}
-)(TodosContainer);
+export default TodosContainer;
 
 
