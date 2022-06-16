@@ -1,3 +1,5 @@
+import {createAction} from "redux-actions";
+import {createReducer} from "typesafe-actions";
 import { Todo } from "../App";
 
 // State interface
@@ -21,35 +23,23 @@ const REMOVE_TODO = "REMOVE_TODO" as const;
 const CLEAR_ALL_TODOS = "CLEAR_ALL_TODOS" as const;
 
 // Action functions
-export const changeTodoInput = (input: string) => ({type: CHANGE_TODO_INPUT, input});
-export const addTodo = (input: string) => ({type: ADD_TODO, todo: {text: input, done: false}});
-export const toggleTodoStatus = (id: number) => ({type: TOGGLE_TODO_STATUS, id});
-export const removeTodo = (id: number) => ({type: REMOVE_TODO, id});
-export const clearAllTodos = () => ({type: CLEAR_ALL_TODOS});
+export const changeTodoInput = createAction(CHANGE_TODO_INPUT, (input: string)=>input);
+export const addTodo = createAction(ADD_TODO, (input: string)=>({text: input, done: false}));
+export const toggleTodoStatus = createAction(TOGGLE_TODO_STATUS, (id: number)=>id);
+export const removeTodo = createAction(REMOVE_TODO, (id: number)=>id);
+export const clearAllTodos = createAction(CLEAR_ALL_TODOS, ()=>{});
 
-// Define return types for action functions
-type TodoAction = ReturnType<typeof changeTodoInput> | ReturnType<typeof addTodo>
-                                | ReturnType<typeof toggleTodoStatus> | ReturnType<typeof removeTodo>
-                                | ReturnType<typeof clearAllTodos>;
-
-// Reducer functions
-function todos(state: TodoState = initialState, action: TodoAction){
-    switch(action.type){
-        case CHANGE_TODO_INPUT:
-            return {...state, input: action.input};
-        case ADD_TODO:
-            const newTodo = {...action.todo, id: state.nextToId};
-            state.nextToId++;
-            return {...state, todos: state.todos.concat(newTodo)};
-        case TOGGLE_TODO_STATUS:
-            return {...state, todos: state.todos.map((todo)=>(todo.id === action.id ? {...todo, done: !todo.done} : todo))};
-        case REMOVE_TODO:
-            return {...state, todos: state.todos.filter((todo)=>(todo.id !== action.id))};
-        case CLEAR_ALL_TODOS:
-            return {...state, todos: []};
-        default:
-            return state;
-    }
-}
+// Define Reducer using createReducer.
+const todos = createReducer(initialState, {
+    [CHANGE_TODO_INPUT]: (state, {payload: input})=>({...state, input: input}),
+    [ADD_TODO]: (state, {payload: todo})=>{
+        const newTodo = {...todo, id: state.nextToId};
+        state.nextToId++;
+        return ({...state, todos: state.todos.concat(newTodo)});
+    },
+    [TOGGLE_TODO_STATUS]: (state, {payload: id})=>({...state, todos: state.todos.map((todo)=>(todo.id === id ? {...todo, done: !todo.done} : todo))}),
+    [REMOVE_TODO]: (state, {payload: id})=>({...state, todos: state.todos.filter((todo)=>(todo.id !== id))}),
+    [CLEAR_ALL_TODOS]: (state, {})=>({...state, todos:[]})
+});
 
 export default todos;

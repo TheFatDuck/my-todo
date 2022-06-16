@@ -1,25 +1,18 @@
 import React from "react";
 import { connect } from "react-redux"
-import {Dispatch} from "redux";
 import {TodoState, changeTodoInput, addTodo, toggleTodoStatus, removeTodo, clearAllTodos} from "../modules/todos";
 import Todos from "../components/Todos";
+import {Todo} from "../App";
 
-// Mapping Store into to Props
-const mapStateToProps = (state: TodoState) => ({input: state.input, todos: state.todos});
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-    changeTodoInput: (input: string) => { dispatch(changeTodoInput(input)); },
-    addTodo: (input: string)=>{dispatch(addTodo((input)));},
-    toggleTodoStatus: (id: number)=>{dispatch(toggleTodoStatus(id));},
-    removeTodo: (id: number)=>{dispatch(removeTodo(id));},
-    clearAllTodos: () => { dispatch(clearAllTodos()); }
-});
-
-// Define types of typescript.
-type PropsState = ReturnType<typeof mapStateToProps>;
-type PropsDispatch = ReturnType<typeof mapDispatchToProps>;
-
-// Define props interface
-interface Props extends  PropsState, PropsDispatch{}
+interface Props{
+    readonly input: string;
+    readonly todos: Todo[];
+    readonly changeTodoInput: (input: string)=>void;
+    readonly addTodo: (input: string)=>void;
+    readonly toggleTodoStatus: (id: number)=>void;
+    readonly removeTodo: (id: number)=>void;
+    readonly clearAllTodos: ()=>void
+}
 
 const TodosContainer = ({input, todos, changeTodoInput, addTodo, toggleTodoStatus, removeTodo, clearAllTodos}: Props) => {
     return (
@@ -29,6 +22,9 @@ const TodosContainer = ({input, todos, changeTodoInput, addTodo, toggleTodoStatu
 }
 
 //Export component.
-export default  connect(mapStateToProps, mapDispatchToProps)(TodosContainer);
+export default  connect(
+    (state: TodoState)=>({input: state.input, todos: state.todos}),
+    {changeTodoInput, addTodo, toggleTodoStatus, removeTodo, clearAllTodos}
+)(TodosContainer);
 
 
