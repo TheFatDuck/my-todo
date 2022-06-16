@@ -1,13 +1,24 @@
 import styles from "../Todo.module.css";
-import {useContext} from "react";
-import TodoContext from "../contexts/todo";
+import React from "react";
 
-const TodoInput = () => {
-    const {state, actions} =  useContext(TodoContext);
+interface Props{
+    readonly input: string;
+    readonly onInsert: (input: string)=>void;
+    readonly  onChangeInput: (input: string)=>void;
+}
+const TodoInput = ({input, onInsert, onChangeInput}: Props) => {
+    const onSubmit = (e: React.FormEvent<HTMLFormElement>)=>{
+        e.preventDefault();
+        onInsert(input);
+        onChangeInput("");
+    }
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>)=>{
+        onChangeInput(e.target.value);
+    }
     return(
         <div className={styles.input}>
-            <form onSubmit={actions.onSubmitTodo}>
-                <input placeholder="Input todo." value={state.input} onChange={actions.onChangeInput} />
+            <form onSubmit={onSubmit}>
+                <input placeholder="Input todo." value={input} onChange={onChange} />
                 <button type="submit">Add</button>
             </form>
         </div>

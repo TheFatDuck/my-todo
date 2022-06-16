@@ -1,9 +1,9 @@
 import React from 'react';
 import './App.css';
-import Todos from './components/Todos';
+import TodosContainer from "./containers/TodoContainer";
 
 function App() {
-  return <Todos/>;
+  return <TodosContainer/>
 }
 
 export default App;
