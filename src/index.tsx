@@ -7,8 +7,20 @@ import {createStore} from "redux";
 import {Provider} from "react-redux"
 import todos from "./modules/todos";
 import { composeWithDevTools} from "redux-devtools-extension";
+import {loadSavedTodos} from "./modules/todos";
 
 const store = createStore(todos, composeWithDevTools());
+const loadData = () => {
+    try{
+        const data = localStorage.getItem("my-todo-app-data");
+        if(!data) return;
+        store.dispatch(loadSavedTodos(JSON.parse(data)));
+    }
+    catch(e){
+        console.error("Failed to load data from local storage.");
+    }
+}
+loadData();
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );

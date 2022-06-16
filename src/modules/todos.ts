@@ -21,6 +21,7 @@ const ADD_TODO = "ADD_TODO" as const;
 const TOGGLE_TODO_STATUS = "TOGGLE_TODO_STATUS" as const;
 const REMOVE_TODO = "REMOVE_TODO" as const;
 const CLEAR_ALL_TODOS = "CLEAR_ALL_TODOS" as const;
+const LOAD_TODOS = "LOAD_TODOS";
 
 // Action functions
 export const changeTodoInput = createAction(CHANGE_TODO_INPUT, (input: string)=>input);
@@ -28,6 +29,7 @@ export const addTodo = createAction(ADD_TODO, (input: string)=>({text: input, do
 export const toggleTodoStatus = createAction(TOGGLE_TODO_STATUS, (id: number)=>id);
 export const removeTodo = createAction(REMOVE_TODO, (id: number)=>id);
 export const clearAllTodos = createAction(CLEAR_ALL_TODOS, ()=>{});
+export const loadSavedTodos = createAction(LOAD_TODOS, (data: string)=>data);
 
 // Define Reducer using createReducer.
 const todos = createReducer(initialState, {
@@ -39,7 +41,8 @@ const todos = createReducer(initialState, {
     },
     [TOGGLE_TODO_STATUS]: (state, {payload: id})=>({...state, todos: state.todos.map((todo)=>(todo.id === id ? {...todo, done: !todo.done} : todo))}),
     [REMOVE_TODO]: (state, {payload: id})=>({...state, todos: state.todos.filter((todo)=>(todo.id !== id))}),
-    [CLEAR_ALL_TODOS]: (state)=>({...state, todos:[]})
+    [CLEAR_ALL_TODOS]: (state)=>({...state, todos:[]}),
+    [LOAD_TODOS]: (state, action)=>({...state, todos: action.payload.todos, nextToId: action.payload.nextToId}),
 });
 
 export default todos;
