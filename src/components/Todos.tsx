@@ -16,15 +16,16 @@ interface Props{
     readonly onInsert: (input: string)=>void;
     readonly onChangeInput: (input: string)=>void;
     readonly onChangeFilter: (filter: string)=>void;
+    readonly onEditTodo: (id: number, input: string)=>void;
 }
 
-const Todos = ({input, filter, todos, onRemove, onToggle, onClearAll, onInsert, onChangeInput, onChangeFilter}: Props) => {
+const Todos = ({input, filter, todos, onRemove, onToggle, onClearAll, onInsert, onChangeInput, onChangeFilter, onEditTodo}: Props) => {
     return(
         <TodoProvider>
             <TodoHeader/>
             <TodoInput input={input} onInsert={onInsert} onChangeInput={onChangeInput}/>
             <TodoFilter filter={filter} onChangeFilter={onChangeFilter}/>
-            <TodoList todos={todos} onRemove={onRemove} onToggle={onToggle}/>
+            <TodoList todos={todos} onRemove={onRemove} onToggle={onToggle} onEditTodo={onEditTodo}/>
             <TodoFooter onClearAll={onClearAll}/>
         </TodoProvider>
     );
