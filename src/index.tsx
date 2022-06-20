@@ -3,13 +3,12 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {createStore} from "redux";
 import {Provider} from "react-redux"
-import todos from "./modules/todos";
-import { composeWithDevTools} from "redux-devtools-extension";
-import {loadSavedTodos} from "./modules/todos";
+import {loadSavedTodos} from "./actions/todos"
+import configureStore from "./store";
+import todos from "./reducers/todos";
 
-const store = createStore(todos, composeWithDevTools());
+const store = configureStore(todos);
 const loadData = () => {
     try{
         const data = localStorage.getItem("my-todo-app-data");

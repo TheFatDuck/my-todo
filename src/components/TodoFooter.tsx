@@ -1,6 +1,6 @@
 import styles from "../Todo.module.css";
 import{useStore} from "react-redux";
-import {TodoState} from "../modules/todos";
+import {TodoState} from "../reducers/todos";
 
 interface Props{
     readonly onClearAll: ()=>void;

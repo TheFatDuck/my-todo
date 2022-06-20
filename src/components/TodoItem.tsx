@@ -1,6 +1,9 @@
 import styles from "../Todo.module.css";
 import {Todo} from "../App"
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useCallback} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {TodoState} from "../reducers/todos";
+import {setEditingId, resetEditingId} from "../actions/todos";
 
 interface Props {
     todo: Todo;
@@ -12,12 +15,16 @@ interface Props {
 const TodoItem = ({todo, onDeleteTodo, onToggleDone, onEditTodo}: Props) => {
     const {id} = todo;
     const editInput: React.RefObject<HTMLInputElement> = React.createRef();
-    const [showInput, setShowInput] = useState(false);
     const [inputText, setInputText] = useState("");
+    const {editingId} = useSelector((state: TodoState)=>({editingId: state.editingId}));
+    const showInput = (id===editingId);
+    const dispatch = useDispatch();
+    const onSetEditingId = useCallback((id: number)=>dispatch(setEditingId(id)), [dispatch]);
+    const onResetEditingId = useCallback(()=>dispatch(resetEditingId()), [dispatch]);
 
     const onDoubleClick = () => {
+        onSetEditingId(id);
         setInputText(todo.text);
-        setShowInput(true);
     };
     const onChange = (e: React.ChangeEvent<HTMLInputElement>)=> {
         setInputText(e.target.value);
@@ -25,11 +32,11 @@ const TodoItem = ({todo, onDeleteTodo, onToggleDone, onEditTodo}: Props) => {
     const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if(e.key === "Enter") {
             onEditTodo(id, inputText);
-            setShowInput(false);
+            onResetEditingId();
         }
     };
     const handleBlur = () => {
-        setShowInput(false);
+        onResetEditingId();
     }
 
     useEffect(()=>{
